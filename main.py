@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from model.book_model import BookModel, ChapterModel, ParagraphModel
 from model.search_model import SearchModel
+from service.bible_service import BibleService
 from service.youtube_service import YoutubeService
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +28,12 @@ async def search_video(searchModel: SearchModel):
     return result
 
 
+@app.get("/bible")
+async def get_bible():
+    return await BibleService().get_bible()
+
+
+@app.get("/bible/{book}")
 
 @app.get("/book/{book_id}")
 async def get_book(book_id: int):
