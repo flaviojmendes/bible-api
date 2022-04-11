@@ -1,8 +1,10 @@
+import os
 from fastapi import FastAPI
 from model.book_model import BookModel, ChapterModel, ParagraphModel
 from model.search_model import SearchModel
 from service.bible_service import BibleService
 from service.youtube_service import YoutubeService
+import uvicorn
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -61,3 +63,19 @@ async def get_book(book_id: int):
     book = BookModel(id=1, title="Dom Casmurro", chapters=[chapter1, chapter2])
 
     return book
+
+if __name__ == '__main__':
+    if(os.environ["ENV"] == 'prod'):
+        uvicorn.run("main:app",
+                    host="0.0.0.0",
+                    port=8000,
+                    reload=True,
+                    ssl_keyfile=os.environ["PRIVATE_KEY"],
+                    ssl_certfile=os.environ["CERT"]
+                    )
+    else:
+        uvicorn.run("main:app",
+                    host="0.0.0.0",
+                    port=8000,
+                    reload=True
+                    )
